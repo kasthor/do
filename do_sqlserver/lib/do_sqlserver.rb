@@ -54,7 +54,8 @@ if RUBY_PLATFORM !~ /java/
             #   instance = SQLEXPRESS
             #   tds version = 8.0
             #
-            connection_string = "DBI:ODBC:DRIVER=FreeTDS;SERVERNAME=sqlserver;DATABASE=#{path};"
+            # connection_string = "DBI:ODBC:DRIVER=FreeTDS;SERVERNAME=#{host};DATABASE=#{path};"
+	    connection_string = "DBI:ODBC:#{host}"
           end
 
           begin
