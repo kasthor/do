@@ -209,8 +209,12 @@ if RUBY_PLATFORM !~ /java/
                 Integer(value)
               elsif t == Float
                 Float(value)
+	      elsif t == DateTime
+	        DateTime.parse(value.to_s) rescue nil
+	      elsif t == Date
+		Date.parse(value.to_s) rescue nil
               else
-                t.new(value)
+                t.new(value) rescue nil
               end
             end
           end
