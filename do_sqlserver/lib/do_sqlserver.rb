@@ -145,6 +145,7 @@ if RUBY_PLATFORM !~ /java/
         def execute_reader *args
           DataObjects::SqlServer.check_params @text, args
           massage_limit_and_offset args
+	  @text, args = massage_in_operator @text, args
           begin
             handle = @connection.raw.execute(@text, *args)
           rescue DBI::DatabaseError => e
@@ -180,6 +181,28 @@ if RUBY_PLATFORM !~ /java/
             "SELECT TOP #{limit} * FROM (SELECT TOP #{offset+limit} #{what} ORDER BY #{rev_order}) ORDER BY #{order}"
           }
         end
+	
+	def massage_in_operator text, args
+
+	  ## Sample Input: [[1, nil, 2], 3], SELECT * FROM test WHERE field IN ? AND field2 = ?
+	  ## Sample Output: [1, 2, 3], SELECT * FROM test WHERE field IN (?, NULL, ?) AND field2 = ?
+	  ## TODO: do spec
+
+	  args_count = -1 
+	  new_args = []
+	  text.gsub! %r{(IN\s+)?\?} do | m |
+	    args_count += 1
+	    case $1 
+	      when /^(IN\s+)$/ 
+		new_args += args[args_count].compact
+		"#{$1}(#{ args[args_count].collect{ |v| v.nil?? 'NULL':'?' }.join ', ' })"
+	      else 
+		new_args << args[args_count]
+		m
+	    end 
+	  end
+	  [ text, new_args ]
+	end
       end
 
       class Result < DataObjects::Result
