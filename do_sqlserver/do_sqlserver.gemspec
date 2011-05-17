@@ -2,8 +2,8 @@
 
 Gem::Specification.new do |s|
   s.name = %q{do_sqlserver}
-  s.version = "0.10.3"
-  # s.platform = %q{java}
+  s.version = "0.10.5"
+  #s.platform = %q{java}
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex Coles"]
