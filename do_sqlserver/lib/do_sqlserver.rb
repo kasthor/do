@@ -236,9 +236,10 @@ if RUBY_PLATFORM !~ /java/
 	        DateTime.parse(value.to_s) rescue nil
 	      elsif t == Date
 		Date.parse(value.to_s) rescue nil
+	      elsif t == String
+	        value.to_s rescue nil
               else
                 t.new(value) rescue nil
-              end
             end
           end
           @handle.finish if @handle && @handle.respond_to?(:finish) && !@handle.finished?
